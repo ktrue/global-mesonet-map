@@ -6,6 +6,8 @@ Version 4.00 of the script set no longer requires an API key for map display. Su
 
 Here's a sample of the display:
 
+<img src="./global-map-sample.png" alt="Sample output">
+
 # Installation/Configuration
 
 The map package (below) comes in one basic configuration:
