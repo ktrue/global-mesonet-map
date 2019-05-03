@@ -1,0 +1,40 @@
+<?php
+// Version 2.00 - 27-Nov-2012 - initial release
+// Version 4.00 - 12-Aug-2018 - update for Leaflet/OpenStreetMaps
+ # The $firstPart is what gets printed when the page is first presented.
+ $firstPart = <<<EOT
+
+    <noscript><b>JavaScript must be enabled in order for you to use the map.</b> 
+      However, it seems JavaScript is either disabled or not supported by your browser. 
+      To view the map, enable JavaScript by changing your browser options, and then 
+      try again.
+    </noscript>
+
+EOT;
+// do not remove the above EOT line
+
+ # The $secondPart is what gets printed under the legend on the map.
+ 
+ $secondPart = <<<EOT
+<p>This map shows the locations of current affiliated regional weather network member stations.</p>
+<p><span style="width: 25px; height: 25px; background-color: rgba(110, 204, 57, 0.6); border-radius: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</span> &nbsp;
+ Markers with numbers indicate clusters of stations - click to zoom the map to show station markers.
+If you click on a marker for a station, a descriptive window will open and show the station features,
+a link to the station's homepage, the regional network affiliations for the station, 
+and current conditions at the station (where available).</p>
+
+EOT;
+// do not remove the above EOT line
+
+ # The $thirdPart is what gets printed at the bottom of the second tab.
+ 
+ $thirdPart = <<<EOT
+
+<p><small>Map data from <a href="https://www.northamericanweather.net/">Affiliated Regional Networks</a> and scripts from
+<a href="https://saratoga-weather.org/">Saratoga-Weather.org</a>.<br/>
+If you have a personal weather station publishing to a personal weather website, you can submit a request to have your
+data included in this display by visiting the network for your geography from the list above.</small></p>
+
+EOT;
+// do not remove the above EOT line
+// end of wxglobal-en.html

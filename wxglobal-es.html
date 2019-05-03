@@ -1,0 +1,41 @@
+<?php
+// Version 2.00 - 27-Nov-2012 - initial release
+// Version 4.00 - 12-Aug-2018 - update for Leaflet/OpenStreetMaps
+
+ # The $firstPart is what gets printed when the page is first presented.
+ $firstPart = <<<EOT
+
+    <noscript><b>JavaScript debe estar habilitado para que pueda usar el mapa. </b>
+       Sin embargo, parece que JavaScript está deshabilitado o no es compatible con su navegador.
+       Para ver el mapa, habilite JavaScript cambiando las opciones de su navegador, y luego
+       Inténtalo de nuevo.
+    </noscript>
+
+EOT;
+// do not remove the above EOT line
+
+ # The $secondPart is what gets printed under the legend on the map.
+ 
+ $secondPart = <<<EOT
+<p>Este mapa muestra las ubicaciones de las estaciones miembro afiliadas a la red meteorológica regional actual.</p>
+<p><span style="width: 25px; height: 25px; background-color: rgba(110, 204, 57, 0.6); border-radius: 10px;">&nbsp;&nbsp;&nbsp;&nbsp;</span> Los marcadores con números indican grupos de estaciones: haga clic para ampliar el mapa y mostrar los marcadores de estaciones.
+Si hace clic en un marcador para una estación, se abrirá una ventana descriptiva y mostrará las características de la estación,
+un enlace a la página principal de la estación, las afiliaciones a la red regional de la estación,
+y las condiciones actuales en la estación (donde esté disponible).</p>
+
+EOT;
+// do not remove the above EOT line
+
+ # The $thirdPart is what gets printed at the bottom of the page.
+ 
+ $thirdPart = <<<EOT
+
+<p><small>Datos del mapa de las <a href="https://www.northamericanweather.net/">Redes regionales afiliadas</a> y secuencias de comandos de
+<a href="https://saratoga-weather.org/">Saratoga-Weather.org</a>.<br/>
+Si usted tiene una web del tiempo con datos de su estación meteorológica, 
+puede presentar una solicitud para que su información sea incluida en esta pantalla, 
+al visitar la red de su zona geográfica de la lista anterior.</small></p>
+
+EOT;
+// do not remove the above EOT line
+// end wxglobal-es.html
