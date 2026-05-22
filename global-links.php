@@ -1,26 +1,29 @@
 <?php
-// proxy fetch for links files from http://www.northamericanweather.net/ for the global network map
+// proxy fetch for links files from http://nawx.net/ for the global network map
 // Ken True - webmaster@saratoga-weather.org
 // Version 1.00 - 17-Jul-2010 - initial release 
 // Version 1.01 - 20-Jul-2010 - added doTargetBlank and targetDir options
 // Version 1.02 - 27-Nov-2013 - updated for global-map V2.00 use
 // Version 4.00 - 12-Aug-2018 - switch to curl for fetching
 // Version 4.02 - 11-Feb-2019 - update to support HTTP/2 returns
+// Version 4.03 - 28-Mar-2026 - fix Deprecated errata with PHP 8.4+
+// Version 4.04 - 21-May-2026 - fixes for PHP 8.5
 // settings -------------------------------------------------------------------
 $doTargetBlank = true; // =true to change links to have target="_blank"
 $refreshTime = 600;  // 10 minute cache time
 $targetDir = './';   // target directory for cache files with trailing '/'
 //-----------------------------------------------------------------------------
-$Version = 'global-links.php V4.02 - 11-Feb-2019';
+$Version = 'global-links.php V4.04 - 21-May-2026';
 
-if (isset($_REQUEST['sce']) && strtolower($_REQUEST['sce']) == 'view' ) {
+if (isset($_REQUEST['sce']) && strtolower($_REQUEST['sce']) == 'view' 
+    and strlen($_REQUEST['sce']) == 4) {
    //--self downloader --
    $filenameReal = __FILE__;
    $download_size = filesize($filenameReal);
    header('Pragma: public');
    header('Cache-Control: private');
    header('Cache-Control: no-cache, must-revalidate');
-   header("Content-type: text/plain; charset=ISO-8859-1");
+   header("Content-type: text/plain");
    header("Accept-Ranges: bytes");
    header("Content-Length: $download_size");
    header('Connection: close');
@@ -28,22 +31,27 @@ if (isset($_REQUEST['sce']) && strtolower($_REQUEST['sce']) == 'view' ) {
    readfile($filenameReal);
    exit;
 }
+if (isset($_REQUEST['sce'])) {
+  header("HTTP/1.1 403 Forbidden");
+  print "<h1>Hacking attempt. Denied.</h1>\n";
+  exit();
+}
 
 if(file_exists('Settings.php')) {include_once('Settings.php'); }
 
 if(isset($doLinkTarget)) {$doTargetBlank = $doLinkTarget; }
 
 $fileSet = array(
-  'network-list-inc.html' => 'https://www.northamericanweather.net/network-list-inc.html',
-  'network-links-inc.html' => 'https://www.northamericanweather.net/network-links-inc.html',
-  'member-count.txt' => 'https://www.northamericanweather.net/member-count.txt',
-  'members-list-inc.html' => 'https://www.northamericanweather.net/members-list-inc.html'
+  'network-list-inc.html' => 'https://nawx.net/network-list-inc.html',
+  'network-links-inc.html' => 'https://nawx.net/network-links-inc.html',
+  'member-count.txt' => 'https://nawx.net/member-count.txt',
+  'members-list-inc.html' => 'https://nawx.net/members-list-inc.html'
 );
 $fileSetML = array(
-  'network-list-inc.html' => 'https://www.northamericanweather.net/network-list-inc-ml.html',
-  'network-links-inc.html' => 'https://www.northamericanweather.net/network-links-inc-ml.html',
-  'member-count.txt' => 'https://www.northamericanweather.net/member-count-ml.txt',
-  'members-list-inc.html' => 'https://www.northamericanweather.net/members-list-inc-ml.html'
+  'network-list-inc.html' => 'https://nawx.net/network-list-inc-ml.html',
+  'network-links-inc.html' => 'https://nawx.net/network-links-inc-ml.html',
+  'member-count.txt' => 'https://nawx.net/member-count-ml.txt',
+  'members-list-inc.html' => 'https://nawx.net/members-list-inc-ml.html'
 );
 
 if(isset($SITE['lang'])) {$fileSet = $fileSetML; }
@@ -70,7 +78,7 @@ foreach ($fileSet as $cacheName => $URL) {
 	$RC = trim($matches[1]);
   }
   
-  if($doTargetBlank and preg_match('|\.html|i',$URL)) { // adjust all the links to have target="_blank"
+  if($doTargetBlank and preg_match('|\.html|i',$URL) and !empty($html)) { // adjust all the links to have target="_blank"
     $html = preg_replace('|<a (.*)">(.*)</a>|Uis',"<a $1\" target=\"_blank\">$2</a>",$html);
     print "<!-- $cacheName target=\"_blank\" added to links -->\n";
   }
@@ -210,7 +218,7 @@ Array
     " secs -->\n";
 
   //$Status .= "<!-- curl info\n".print_r($cinfo,true)." -->\n";
-  curl_close($ch);                                              // close the cURL session
+  if(PHP_MAJOR_VERSION < 8) {curl_close($ch); }// close the cURL session
   //$Status .= "<!-- raw data\n".$data."\n -->\n"; 
   $i = strpos($data,"\r\n\r\n");
   $headers = substr($data,0,$i);
@@ -218,6 +226,7 @@ Array
   if($cinfo['http_code'] <> '200') {
     $Status .= "<!-- headers returned:\n".$headers."\n -->\n"; 
   }
+  echo $Status;
   return $data;                                                 // return headers+contents
 
  } else {
@@ -272,10 +281,5 @@ function GMLINKS_fetch_microtime()
    return ((float)$usec + (float)$sec);
 }
    
-// ----------------------------------------------------------
-
 
 // ------------------------------------------------------------------
-
-
-?>
