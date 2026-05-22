@@ -7,11 +7,12 @@
 // Version 1.02 - 27-Nov-2013 - support for Google map V3 with Global Map V2.00
 // Version 4.00 - 12-Aug-2018 - rewrite for Leaflet/OpenStreetMaps
 // Version 4.02 - 11-Feb-2019 - update to support HTTP/2 returns
+// Version 4.03 - 21-May-2026 - fixes for PHP 8.5
 // settings -------------------------------------------------------------------
 $refreshTime = 300;  // 10 minute cache time
 $targetDir = './';   // target directory for cache files with trailing '/'
 //-----------------------------------------------------------------------------
-$Version = 'global-conditions-json.php V4.02 - 11-Feb-2019';
+$Version = 'global-conditions-json.php V4.03 - 21-May-2026';
 
 if (isset($_REQUEST['sce']) && strtolower($_REQUEST['sce']) == 'view' ) {
    //--self downloader --
@@ -198,7 +199,7 @@ Array
     " secs -->\n";
 
   //$Status .= "<!-- curl info\n".print_r($cinfo,true)." -->\n";
-  curl_close($ch);                                              // close the cURL session
+  if(PHP_MAJOR_VERSION < 8) {curl_close($ch); }// close the cURL session
   //$Status .= "<!-- raw data\n".$data."\n -->\n"; 
   $i = strpos($data,"\r\n\r\n");
   $headers = substr($data,0,$i);
@@ -259,5 +260,3 @@ function GMAP_fetch_microtime()
    list($usec, $sec) = explode(" ", microtime());
    return ((float)$usec + (float)$sec);
 }
-   
-?>
